@@ -8,7 +8,7 @@ public interface CustomerService {
     boolean isCustomerExists(String email,String password) throws CouponSystemException;
     void addCustomer(Customer customer) throws CouponSystemException;
     void updateCustomer(Customer customer) throws CouponSystemException;
-    void deleteCustomer(int customerID);
+    void deleteCustomer(int customerID) throws CouponSystemException;
     List<Customer> getAllCustomers();
     Customer getOneCustomer(int customerID) throws CouponSystemException;
 }

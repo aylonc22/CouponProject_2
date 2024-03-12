@@ -18,9 +18,9 @@ import java.sql.Date;
 public class Coupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int couponID;
     @Column(nullable = false)
-    private int company_id;
+    private int companyID;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Category category;

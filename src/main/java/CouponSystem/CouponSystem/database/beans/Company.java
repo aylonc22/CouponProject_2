@@ -2,7 +2,6 @@ package CouponSystem.CouponSystem.database.beans;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class Company {
     private String email;
     @Column(nullable = false)
     private String password;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "companyID",cascade = CascadeType.ALL,orphanRemoval = true)
     @Singular
     private List<Coupon> coupons;
 }

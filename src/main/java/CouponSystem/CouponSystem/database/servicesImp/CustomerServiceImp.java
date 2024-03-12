@@ -33,7 +33,7 @@ public class CustomerServiceImp implements CustomerService {
 
     @Override
     public void updateCustomer(Customer customer) throws CouponSystemException {
-        if(customerRepo.existsById(customer.getId())) {
+        if(customerRepo.existsById(customer.getCustomerID())) {
             customerRepo.saveAndFlush(customer);
             System.out.println("Customer updated\n" + customer);
         }
@@ -43,7 +43,10 @@ public class CustomerServiceImp implements CustomerService {
     }
 
     @Override
-    public void deleteCustomer(int customerID) {
+    public void deleteCustomer(int customerID) throws CouponSystemException {
+         customerRepo.findById(customerID)
+                 .orElseThrow(()->new CouponSystemException(ErrMsg.CUSTOMER_NOT_FOUND));
+
         customerRepo.deleteById(customerID);
         System.out.println("Customer ID: " + customerID + " is deleted");
     }

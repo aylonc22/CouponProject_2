@@ -3,16 +3,22 @@ package CouponSystem.CouponSystem.database.servicesImp;
 import CouponSystem.CouponSystem.Exceptions.CouponSystemException;
 import CouponSystem.CouponSystem.Exceptions.ErrMsg;
 import CouponSystem.CouponSystem.database.beans.Company;
+import CouponSystem.CouponSystem.database.beans.Customer;
 import CouponSystem.CouponSystem.database.repos.CompanyRepo;
+import CouponSystem.CouponSystem.database.repos.CouponRepo;
+import CouponSystem.CouponSystem.database.repos.CustomerRepo;
 import CouponSystem.CouponSystem.database.services.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CompanyServiceImp implements CompanyService {
     private final CompanyRepo companyRepo;
+    private final CouponRepo couponRepo;
+    private final CustomerRepo customerRepo;
 
     /**
      *
@@ -53,8 +59,20 @@ public class CompanyServiceImp implements CompanyService {
     }
 
     @Override
-    public void deleteCompany(int companyID) {
-            companyRepo.deleteById(companyID);
+    public void deleteCompany(int companyID) throws CouponSystemException {
+      Company company = companyRepo.findById(companyID)
+                .orElseThrow(()->new CouponSystemException(ErrMsg.COMPANY_NOT_FOUND));
+        List<Integer> customerIds = customerRepo.findCustomerIdsByCompanyCoupons(companyID);
+
+        for (Integer customerId : customerIds) {
+            Customer customer = customerRepo.findById(customerId)
+                    .orElseThrow(() -> new CouponSystemException(ErrMsg.CUSTOMER_NOT_FOUND));
+
+            customer.getCoupons().removeIf(coupon -> coupon.getCompanyID() == companyID);
+            customerRepo.saveAndFlush(customer);
+        }
+        couponRepo.deleteAll(company.getCoupons());
+        companyRepo.deleteById(companyID);
         System.out.println("Company ID: " + companyID + " deleted");
     }
 

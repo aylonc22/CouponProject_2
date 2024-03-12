@@ -8,7 +8,7 @@ public interface CompanyService {
     boolean isCompanyExists(String email, String password) throws CouponSystemException;
     void addCompany(Company company) throws CouponSystemException;
     void updateCompany(Company company) throws CouponSystemException;
-    void deleteCompany(int companyID);
+    void deleteCompany(int companyID) throws CouponSystemException;
     List<Company> getAllCompanies();
     Company getOneCompany(int companyID) throws CouponSystemException;
 
