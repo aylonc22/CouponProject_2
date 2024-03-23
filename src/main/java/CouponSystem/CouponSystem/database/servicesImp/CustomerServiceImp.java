@@ -2,7 +2,10 @@ package CouponSystem.CouponSystem.database.servicesImp;
 
 import CouponSystem.CouponSystem.Exceptions.CouponSystemException;
 import CouponSystem.CouponSystem.Exceptions.ErrMsg;
+import CouponSystem.CouponSystem.database.beans.Category;
+import CouponSystem.CouponSystem.database.beans.Coupon;
 import CouponSystem.CouponSystem.database.beans.Customer;
+import CouponSystem.CouponSystem.database.repos.CouponRepo;
 import CouponSystem.CouponSystem.database.repos.CustomerRepo;
 import CouponSystem.CouponSystem.database.services.CustomerService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomerServiceImp implements CustomerService {
 
-   final CustomerRepo customerRepo;
+   private final CustomerRepo customerRepo;
+   private final CouponRepo couponRepo;
     @Override
     public boolean isCustomerExists(String email, String password) throws CouponSystemException {
         if(customerRepo.existsByEmailAndPassword(email, password))
@@ -60,5 +64,20 @@ public class CustomerServiceImp implements CustomerService {
     public Customer getOneCustomer(int customerID) throws CouponSystemException {
         return customerRepo.findById(customerID)
                 .orElseThrow(()->new CouponSystemException(ErrMsg.CUSTOMER_NOT_FOUND));
+    }
+
+    @Override
+    public List<Coupon> getAllCustomerCoupons(int customerID) throws CouponSystemException {
+        return getOneCustomer(customerID).getCoupons();
+    }
+
+    @Override
+    public List<Coupon> getAllCustomerCouponsByCategory(Category category, int customerID) {
+        return customerRepo.findCouponsByCustomerIDAndCouponsCategory(customerID,category);
+    }
+
+    @Override
+    public List<Coupon> getAllCustomerCouponsByMaxPrice(double price, int customerID) {
+        return customerRepo.findCouponsByCustomerIDAndCouponsPriceLessThanEqual(customerID,price);
     }
 }

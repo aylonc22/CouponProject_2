@@ -8,7 +8,7 @@ import java.util.List;
 public interface CouponService {
     void addCoupon(Coupon coupon) throws CouponSystemException;
     void updateCoupon(Coupon coupon) throws CouponSystemException;
-    void deleteCoupon(int couponID);
+    void deleteCoupon(int couponID) throws CouponSystemException;
     List<Coupon> getAllCoupons();
     Coupon getOneCoupon(int couponID) throws CouponSystemException;
     void addCouponPurchase(int customerID,int couponID) throws CouponSystemException;

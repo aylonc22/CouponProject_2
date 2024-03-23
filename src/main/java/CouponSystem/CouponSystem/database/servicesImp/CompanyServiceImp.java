@@ -2,7 +2,9 @@ package CouponSystem.CouponSystem.database.servicesImp;
 
 import CouponSystem.CouponSystem.Exceptions.CouponSystemException;
 import CouponSystem.CouponSystem.Exceptions.ErrMsg;
+import CouponSystem.CouponSystem.database.beans.Category;
 import CouponSystem.CouponSystem.database.beans.Company;
+import CouponSystem.CouponSystem.database.beans.Coupon;
 import CouponSystem.CouponSystem.database.beans.Customer;
 import CouponSystem.CouponSystem.database.repos.CompanyRepo;
 import CouponSystem.CouponSystem.database.repos.CouponRepo;
@@ -85,5 +87,20 @@ public class CompanyServiceImp implements CompanyService {
     public Company getOneCompany(int companyID) throws CouponSystemException {
         return companyRepo.findById(companyID)
                 .orElseThrow(()->new CouponSystemException(ErrMsg.COMPANY_NOT_FOUND));
+    }
+
+    @Override
+    public List<Coupon> getAllCompanyCoupons(int companyID) throws CouponSystemException {
+        return getOneCompany(companyID).getCoupons();
+    }
+
+    @Override
+    public List<Coupon> getAllCompanyCouponsByCategory(Category category, int companyID) {
+        return couponRepo.findAllByCompanyIDAndCategory(companyID,category);
+    }
+
+    @Override
+    public List<Coupon> getAllCompanyCouponsByMaxPrice(double price, int companyID) {
+        return couponRepo.findAllByCompanyIDAndPriceLessThanEqual(companyID,price);
     }
 }

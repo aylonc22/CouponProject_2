@@ -1,6 +1,7 @@
 package CouponSystem.CouponSystem.database.repos;
 
 import CouponSystem.CouponSystem.database.beans.Company;
+import CouponSystem.CouponSystem.database.beans.Coupon;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
