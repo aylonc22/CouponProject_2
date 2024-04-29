@@ -18,8 +18,9 @@ public class CustomerTest implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         try{
+            System.out.println("Testing Customer");
             System.out.println("buying coupon");
-            couponService.addCouponPurchase(1,3);
+            couponService.addCouponPurchase(1,4);
             System.out.println("Printing all customer coupons");
             System.out.println(customerService.getAllCustomerCoupons(1));
             System.out.println("Printing all customer coupons by category");

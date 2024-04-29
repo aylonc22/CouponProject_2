@@ -23,6 +23,7 @@ public class CompanyTest implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         try{
+            System.out.println("Testing Company");
             LocalDate date = LocalDate.now();
             Coupon coupon = Coupon.builder()
                     .couponID(0)

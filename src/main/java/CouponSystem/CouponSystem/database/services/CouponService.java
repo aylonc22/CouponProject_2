@@ -13,4 +13,5 @@ public interface CouponService {
     Coupon getOneCoupon(int couponID) throws CouponSystemException;
     void addCouponPurchase(int customerID,int couponID) throws CouponSystemException;
     void deleteCouponPurchase(int customerID,int couponID) throws CouponSystemException;
+    void deleteExpiredCoupons() throws CouponSystemException;
 }

@@ -52,12 +52,25 @@ public class Init implements CommandLineRunner {
                     .price(15)
                     .image("image")
                     .build();
+            Coupon coupon3 = Coupon.builder()
+                    .couponID(0)
+                    .companyID(1)
+                    .category(Category.Electricity)
+                    .title("expired")
+                    .description("expired test coupon")
+                    .start_date(Date.valueOf(date))
+                    .end_date(Date.valueOf(date.minusDays(5)))
+                    .amount(5)
+                    .price(15)
+                    .image("image")
+                    .build();
             companyService.addCompany(Company.builder()
                     .id(0)
                     .email("HardCodedCompany@gmail.com")
                     .name("HardCodedName")
                     .password("123456")
                     .coupon(coupon1)
+                    .coupon(coupon3)
                     .build());
 
             companyService.addCompany(Company.builder()
@@ -76,6 +89,7 @@ public class Init implements CommandLineRunner {
                             .last_name("Coded")
                             .password("123456")
                             .coupon(coupon1)
+                            .coupon(coupon3)
                             .build());
 
             customerService.addCustomer(Customer.builder()

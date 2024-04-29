@@ -105,4 +105,14 @@ public class CouponServiceImp implements CouponService {
       customerRepo.saveAndFlush(customer);
       System.out.println("Customer ID: " + customerID + " removed coupon ID: " + couponID);
     }
+
+  @Override
+  public void deleteExpiredCoupons() throws CouponSystemException {
+    List<Coupon> coupons = couponRepo.findExpiredCoupons();
+    for (Coupon coupon : coupons) {
+      System.out.println(coupon);
+      deleteCoupon(coupon.getCouponID());
+    }
+
+  }
 }
