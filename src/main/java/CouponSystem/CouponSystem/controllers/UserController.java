@@ -29,6 +29,6 @@ public class UserController {
         HttpHeaders headers = new HttpHeaders();
         UserDetails userDetails = userServiceImp.login(user);
         headers.set("Authorization","Bearer "+jwt.generateToken(userDetails));
-        return new ResponseEntity<>(true,headers,HttpStatus.OK);
+        return new ResponseEntity<>(userDetails.getId(),headers,HttpStatus.OK);
     }
 }
