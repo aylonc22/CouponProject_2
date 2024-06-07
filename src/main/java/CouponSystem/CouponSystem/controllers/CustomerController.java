@@ -1,12 +1,17 @@
 package CouponSystem.CouponSystem.controllers;
 
 import CouponSystem.CouponSystem.Exceptions.CouponSystemException;
+import CouponSystem.CouponSystem.beans.UserType;
 import CouponSystem.CouponSystem.database.beans.Category;
 import CouponSystem.CouponSystem.database.beans.Coupon;
 import CouponSystem.CouponSystem.database.servicesImp.CouponServiceImp;
 import CouponSystem.CouponSystem.database.servicesImp.CustomerServiceImp;
+import CouponSystem.CouponSystem.util.Jwt;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,32 +19,56 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/customer")
+@CrossOrigin
 public class CustomerController {
     private final CustomerServiceImp customerServiceImp;
     private final CouponServiceImp couponServiceImp;
+    private final Jwt JWT;
     @PostMapping("/buyCoupon/{couponID}/{customerID}")
-    @ResponseStatus(HttpStatus.OK)
-    public void buyCoupon(@PathVariable int couponID,@PathVariable int customerID) throws CouponSystemException {
-        couponServiceImp.addCouponPurchase(customerID,couponID);
+    public ResponseEntity<?> buyCoupon(@RequestHeader("Authorization") String jwt,@PathVariable int couponID, @PathVariable int customerID) throws CouponSystemException, SignatureException {
+        String userJwt = jwt.split(" ")[1];
+        HttpHeaders headers = JWT.getHeaders(jwt);
+        if(JWT.getUserType(userJwt).equals(UserType.CUSTOMER.toString())){
+            couponServiceImp.addCouponPurchase(customerID,couponID);
+            return new ResponseEntity<>(headers,HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(headers,HttpStatus.FORBIDDEN);
     }
     @GetMapping("/coupons/{customerID}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Coupon> getAllCoupons(@PathVariable int customerID) throws CouponSystemException {
-       return customerServiceImp.getAllCustomerCoupons(customerID);
+    public ResponseEntity<?> getAllCoupons(@RequestHeader("Authorization") String jwt,@PathVariable int customerID) throws CouponSystemException, SignatureException {
+        String userJwt = jwt.split(" ")[1];
+        HttpHeaders headers = JWT.getHeaders(jwt);
+        if(JWT.getUserType(userJwt).equals(UserType.CUSTOMER.toString())){
+            return new ResponseEntity<>(customerServiceImp.getAllCustomerCoupons(customerID),headers,HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(headers,HttpStatus.FORBIDDEN);
     }
     @GetMapping("/couponsByCategory/{category}/{customerID}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Coupon> getAllCouponsByCategory(@PathVariable Category category,@PathVariable int customerID) throws CouponSystemException {
-        return customerServiceImp.getAllCustomerCouponsByCategory(category,customerID);
+    public ResponseEntity<?> getAllCouponsByCategory(@RequestHeader("Authorization") String jwt,@PathVariable Category category,@PathVariable int customerID) throws  SignatureException {
+        String userJwt = jwt.split(" ")[1];
+        HttpHeaders headers = JWT.getHeaders(jwt);
+        if(JWT.getUserType(userJwt).equals(UserType.CUSTOMER.toString())){
+            return new ResponseEntity<>(customerServiceImp.getAllCustomerCouponsByCategory(category,customerID),headers,HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(headers,HttpStatus.FORBIDDEN);
     }
     @GetMapping("/couponsByMaxPrice/{price}/{customerID}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Coupon> getAllCouponsByMaxPrice(@PathVariable double price,@PathVariable int customerID) throws CouponSystemException {
-        return customerServiceImp.getAllCustomerCouponsByMaxPrice(price,customerID);
+    public ResponseEntity<?> getAllCouponsByMaxPrice(@RequestHeader("Authorization") String jwt,@PathVariable double price,@PathVariable int customerID) throws  SignatureException {
+        String userJwt = jwt.split(" ")[1];
+        HttpHeaders headers = JWT.getHeaders(jwt);
+        if(JWT.getUserType(userJwt).equals(UserType.CUSTOMER.toString())){
+            return new ResponseEntity<>(customerServiceImp.getAllCustomerCouponsByMaxPrice(price,customerID),headers,HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(headers,HttpStatus.FORBIDDEN);
     }
-//    @GetMapping()
-//    @ResponseStatus(HttpStatus.OK)
-//    public String getDetails(){
-//        return customerServiceImp.getOneCustomer();
-//    }
+    @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getDetails(@RequestHeader("Authorization") String jwt) throws SignatureException, CouponSystemException {
+        String userJwt = jwt.split(" ")[1];
+        HttpHeaders headers = JWT.getHeaders(jwt);
+        if(JWT.getUserType(userJwt).equals(UserType.CUSTOMER.toString())){
+            return new ResponseEntity<>(customerServiceImp.getOneCustomer(JWT.extractId(userJwt)),headers,HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(headers,HttpStatus.FORBIDDEN);
+    }
 }

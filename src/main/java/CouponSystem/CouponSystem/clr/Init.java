@@ -27,6 +27,13 @@ public class Init implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         try{
+            customerService.addCustomer(Customer.builder()
+                    .customerID(0)
+                    .email("admin@admin.com")
+                    .first_name("admin")
+                    .last_name("admin")
+                    .password("admin")
+                    .build());
             LocalDate date = LocalDate.now();
             Coupon coupon1 = Coupon.builder()
                     .couponID(0)
@@ -100,6 +107,8 @@ public class Init implements CommandLineRunner {
                     .password("123456")
                     .coupons(List.of(coupon1,coupon2))
                     .build());
+
+
         }
         catch (CouponSystemException e){
             System.out.println(e.getMessage());

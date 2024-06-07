@@ -1,19 +1,23 @@
 package CouponSystem.CouponSystem.config;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
-
-
 @Configuration
+
 public class OpenAPIConfiguration {
     @Bean
-    public OpenAPI defineOpenAPI(){
+    public OpenAPI defineOpenAPI(@Value("springdoc-openapi-ui") String serviceTitle, @Value("1.6.12") String serviceVersion){
         Server server = new Server();
         server.setUrl("http://localhost:8080");
         server.setDescription("CouponSystem api for development");
@@ -28,7 +32,21 @@ public class OpenAPIConfiguration {
                 .description("This API exposes endpoints to manage CouponSystem")
                 .contact(myContact);
 
-        return new OpenAPI().info(info).servers(List.of(server));
+        final String securitySchemeName = "bearerAuth";
+
+        return new OpenAPI()
+                .components(
+                        new Components().addSecuritySchemes(
+                                securitySchemeName,
+                                new SecurityScheme()
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")
+                        )
+                )
+
+                .info(info.version(serviceVersion)).servers(List.of(server));
 
     }
+
 }

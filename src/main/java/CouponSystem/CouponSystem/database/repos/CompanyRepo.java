@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CompanyRepo extends JpaRepository<Company,Integer> {
-    Boolean existsByEmailAndPassword(String name,String email);
+    Company findByEmailAndPassword(String name,String email);
     Boolean existsByNameOrEmail(String name, String email);
 }

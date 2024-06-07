@@ -23,20 +23,18 @@ public class CompanyServiceImp implements CompanyService {
     private final CustomerRepo customerRepo;
 
     /**
-     *
-     * @param email of company
+     * @param email    of company
      * @param password of company
-     * @return true if not throwing exception before
+     * @return company id if not throwing exception before
      * @throws CouponSystemException custom exception
      */
     @Override
-    public boolean isCompanyExists(String email, String password) throws CouponSystemException {
-
-        if(companyRepo.existsByEmailAndPassword(email,password)) {
-            return true;
-        }
-
-        throw new CouponSystemException(ErrMsg.COMPANY_NOT_FOUND);
+    public int isCompanyExists(String email, String password) throws CouponSystemException {
+        Company company = companyRepo.findByEmailAndPassword(email,password);
+            if(company==null){
+                throw new CouponSystemException(ErrMsg.COMPANY_NOT_FOUND);
+            }
+            return  company.getId();
     }
 
     @Override

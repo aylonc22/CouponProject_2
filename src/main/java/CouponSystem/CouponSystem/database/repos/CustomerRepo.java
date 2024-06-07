@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface CustomerRepo extends JpaRepository<Customer,Integer> {
-    Boolean existsByEmailAndPassword(String name,String email);
+    Customer findByEmailAndPassword(String email, String password);
     Boolean existsByEmail(String email);
     @Query("SELECT coupon FROM Customer c JOIN c.coupons coupon WHERE c.customerID = :customerId AND coupon.category = :category")
     List<Coupon> findCouponsByCustomerIDAndCouponsCategory(int customerId, Category category);

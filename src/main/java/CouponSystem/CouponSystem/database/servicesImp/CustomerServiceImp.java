@@ -5,7 +5,6 @@ import CouponSystem.CouponSystem.Exceptions.ErrMsg;
 import CouponSystem.CouponSystem.database.beans.Category;
 import CouponSystem.CouponSystem.database.beans.Coupon;
 import CouponSystem.CouponSystem.database.beans.Customer;
-import CouponSystem.CouponSystem.database.repos.CouponRepo;
 import CouponSystem.CouponSystem.database.repos.CustomerRepo;
 import CouponSystem.CouponSystem.database.services.CustomerService;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +16,13 @@ import java.util.List;
 public class CustomerServiceImp implements CustomerService {
 
    private final CustomerRepo customerRepo;
-   private final CouponRepo couponRepo;
     @Override
-    public boolean isCustomerExists(String email, String password) throws CouponSystemException {
-        if(customerRepo.existsByEmailAndPassword(email, password))
-            return  true;
-        throw new CouponSystemException(ErrMsg.CUSTOMER_NOT_FOUND);
-
+    public int isCustomerExists(String email, String password) throws CouponSystemException {
+       Customer customer = customerRepo.findByEmailAndPassword(email,password);
+       if(customer == null){
+           throw new CouponSystemException(ErrMsg.CUSTOMER_NOT_FOUND);
+       }
+        return customer.getCustomerID();
     }
 
     @Override

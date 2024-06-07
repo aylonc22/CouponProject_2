@@ -1,72 +1,123 @@
 package CouponSystem.CouponSystem.controllers;
 
 import CouponSystem.CouponSystem.Exceptions.CouponSystemException;
+import CouponSystem.CouponSystem.beans.UserType;
 import CouponSystem.CouponSystem.database.beans.Company;
 import CouponSystem.CouponSystem.database.beans.Customer;
 import CouponSystem.CouponSystem.database.servicesImp.CompanyServiceImp;
 import CouponSystem.CouponSystem.database.servicesImp.CustomerServiceImp;
+import CouponSystem.CouponSystem.util.Jwt;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
+@CrossOrigin
 public class AdminController {
     private final CompanyServiceImp companyServiceImp;
     private final CustomerServiceImp customerServiceImp;
+    private final Jwt JWT;
     @PostMapping("/company")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void addCompany(@Validated @RequestBody Company company) throws CouponSystemException {
-        companyServiceImp.addCompany(company);
+    public ResponseEntity<?> addCompany(@RequestHeader("Authorization") String jwt, @Validated @RequestBody Company company) throws CouponSystemException,SignatureException {
+        String userJwt = jwt.split(" ")[1];
+        HttpHeaders headers = JWT.getHeaders(jwt);
+        if(JWT.getUserType(userJwt).equals(UserType.ADMIN.toString())){
+            companyServiceImp.addCompany(company);
+            return new ResponseEntity<>(headers,HttpStatus.CREATED);
+        }
+        return  new ResponseEntity<>(headers,HttpStatus.FORBIDDEN);
     }
     @PutMapping("/company/update")
-    @ResponseStatus(HttpStatus.OK)
-    public void updateCompany(@Validated @RequestBody  Company company) throws CouponSystemException {
-        companyServiceImp.updateCompany(company);
+    public ResponseEntity<?> updateCompany(@RequestHeader("Authorization") String jwt,@Validated @RequestBody  Company company) throws CouponSystemException,SignatureException {
+        String userJwt = jwt.split(" ")[1];
+        HttpHeaders headers = JWT.getHeaders(jwt);
+        if(JWT.getUserType(userJwt).equals(UserType.ADMIN.toString())){
+            companyServiceImp.updateCompany(company);
+            return new ResponseEntity<>(headers,HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(headers,HttpStatus.FORBIDDEN);
     }
     @DeleteMapping("/company/delete/{companyID}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteCompany(@PathVariable int companyID) throws CouponSystemException {
-        companyServiceImp.deleteCompany(companyID);
+    public ResponseEntity<?> deleteCompany(@RequestHeader("Authorization") String jwt,@PathVariable int companyID) throws CouponSystemException ,SignatureException{
+        String userJwt = jwt.split(" ")[1];
+        HttpHeaders headers = JWT.getHeaders(jwt);
+        if(JWT.getUserType(userJwt).equals(UserType.ADMIN.toString())){
+            companyServiceImp.deleteCompany(companyID);
+            return new ResponseEntity<>(headers,HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(headers,HttpStatus.FORBIDDEN);
     }
     @GetMapping("/company")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Company> getAllCompanies() {
-        return companyServiceImp.getAllCompanies();
+    public ResponseEntity<?> getAllCompanies(@RequestHeader("Authorization") String jwt) throws SignatureException{
+        String userJwt = jwt.split(" ")[1];
+        HttpHeaders headers = JWT.getHeaders(jwt);
+        if(JWT.getUserType(userJwt).equals(UserType.ADMIN.toString())){
+            return new ResponseEntity<>(companyServiceImp.getAllCompanies(),headers,HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(headers,HttpStatus.FORBIDDEN);
     }
     @GetMapping("/company/{companyID}")
-    @ResponseStatus(HttpStatus.OK)
-    public Company getOneCompany(@PathVariable  int companyID) throws CouponSystemException {
-        return companyServiceImp.getOneCompany(companyID);
+    public ResponseEntity<?> getOneCompany(@RequestHeader("Authorization") String jwt,@PathVariable  int companyID) throws CouponSystemException,SignatureException {
+        String userJwt = jwt.split(" ")[1];
+        HttpHeaders headers = JWT.getHeaders(jwt);
+        if(JWT.getUserType(userJwt).equals(UserType.ADMIN.toString())){
+            return new ResponseEntity<>(companyServiceImp.getOneCompany(companyID),headers,HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(headers,HttpStatus.FORBIDDEN);
     }
     @PostMapping("/customer")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void addCustomer(@Validated @RequestBody Customer customer) throws CouponSystemException {
-        customerServiceImp.addCustomer(customer);
+    public ResponseEntity<?> addCustomer(@RequestHeader("Authorization") String jwt,@Validated @RequestBody Customer customer) throws CouponSystemException,SignatureException {
+        String userJwt = jwt.split(" ")[1];
+        HttpHeaders headers = JWT.getHeaders(jwt);
+        if(JWT.getUserType(userJwt).equals(UserType.ADMIN.toString())){
+            customerServiceImp.addCustomer(customer);
+            return new ResponseEntity<>(headers,HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(headers,HttpStatus.FORBIDDEN);
     }
     @PutMapping("/customer/update")
-    @ResponseStatus(HttpStatus.OK)
-    public void updateCustomer(@Validated @RequestBody  Customer customer) throws CouponSystemException {
-        customerServiceImp.updateCustomer(customer);
+    public ResponseEntity<?> updateCustomer(@RequestHeader("Authorization") String jwt,@Validated @RequestBody  Customer customer) throws CouponSystemException,SignatureException {
+        String userJwt = jwt.split(" ")[1];
+        HttpHeaders headers = JWT.getHeaders(jwt);
+        if(JWT.getUserType(userJwt).equals(UserType.ADMIN.toString())){
+            customerServiceImp.updateCustomer(customer);
+            return new ResponseEntity<>(headers,HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(headers,HttpStatus.FORBIDDEN);
     }
     @DeleteMapping("/customer/delete/{customerID}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteCustomer(@PathVariable int customerID) throws CouponSystemException {
-        customerServiceImp.deleteCustomer(customerID);
+    public ResponseEntity<?> deleteCustomer(@RequestHeader("Authorization") String jwt,@PathVariable int customerID) throws CouponSystemException,SignatureException {
+        String userJwt = jwt.split(" ")[1];
+        HttpHeaders headers = JWT.getHeaders(jwt);
+        if(JWT.getUserType(userJwt).equals(UserType.ADMIN.toString())){
+            customerServiceImp.deleteCustomer(customerID);
+            return new ResponseEntity<>(headers,HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(headers,HttpStatus.FORBIDDEN);
     }
     @GetMapping("/customer")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Customer> getAllCustomers() {
-        return customerServiceImp.getAllCustomers();
+    public ResponseEntity<?> getAllCustomers(@RequestHeader("Authorization") String jwt) throws SignatureException{
+        String userJwt = jwt.split(" ")[1];
+        HttpHeaders headers = JWT.getHeaders(jwt);
+        if(JWT.getUserType(userJwt).equals(UserType.ADMIN.toString())){
+            return new ResponseEntity<>(customerServiceImp.getAllCustomers(),headers,HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(headers,HttpStatus.FORBIDDEN);
     }
 
     @GetMapping("/customer/{customerID}")
-    @ResponseStatus(HttpStatus.OK)
-    public Customer getOneCustomer(@PathVariable  int customerID) throws CouponSystemException {
-        return customerServiceImp.getOneCustomer(customerID);
+    public ResponseEntity<?> getOneCustomer(@RequestHeader("Authorization") String jwt,@PathVariable  int customerID) throws CouponSystemException,SignatureException {
+        String userJwt = jwt.split(" ")[1];
+        HttpHeaders headers = JWT.getHeaders(jwt);
+        if(JWT.getUserType(userJwt).equals(UserType.ADMIN.toString())){
+            return new ResponseEntity<>(customerServiceImp.getOneCustomer(customerID),headers,HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(headers,HttpStatus.FORBIDDEN);
     }
 }

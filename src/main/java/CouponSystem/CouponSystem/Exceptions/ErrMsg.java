@@ -6,6 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum ErrMsg {
+    USER_NOT_ADMIN("User is not admin!"),
     ADMIN_NOT_LOGGED_IN("Admin is not logged in!"),
     CLIENT_NOT_LOGGED_IN("Client is not logged in!"),
     CLIENT_NOT_ADMIN("Client is not registered as administrator!"),
@@ -17,6 +18,7 @@ public enum ErrMsg {
     SQL_DUPLICATE("Unique key exception!"),
     COMPANY_ALREADY_EXISTS("A company with the same name or email already exists!"),
     CUSTOMER_ALREADY_EXISTS("A customer with the same email already exists"),
-    COUPON_ALREADY_EXISTS("A coupon from this company has a same title");
+    COUPON_ALREADY_EXISTS("A coupon from this company has a same title"),
+    USER_NOT_ALLOWED("User not allowed");
     private String msg;
 }

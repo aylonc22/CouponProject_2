@@ -8,7 +8,7 @@ import CouponSystem.CouponSystem.database.beans.Coupon;
 import java.util.List;
 
 public interface CompanyService {
-    boolean isCompanyExists(String email, String password) throws CouponSystemException;
+    int isCompanyExists(String email, String password) throws CouponSystemException;
     void addCompany(Company company) throws CouponSystemException;
     void updateCompany(Company company) throws CouponSystemException;
     void deleteCompany(int companyID) throws CouponSystemException;
