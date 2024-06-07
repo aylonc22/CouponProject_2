@@ -24,13 +24,14 @@ public class UserServiceImp implements UserService {
                                 .id(0)
                                 .name(user.getUserName())
                                 .email(user.getPassword())
+                                .password(user.getPassword())
                         .build());
                 break;
             case CUSTOMER:
                 customerServiceImp.addCustomer(Customer.builder()
                                 .customerID(0)
-                                .first_name(user.getUserName().split("-")[0])
-                                .last_name(user.getUserName().split("-")[1])
+                                .first_name(user.getUserName().split("_")[0])
+                                .last_name(user.getUserName().split("_")[1])
                                 .email(user.getEmail())
                                 .password(user.getPassword())
                         .build());
