@@ -44,7 +44,10 @@ public class UserServiceImp implements UserService {
 
        switch (credentials.getUserType()){
            case CUSTOMER:
-                  int customerId =  customerServiceImp.isCustomerExists(credentials.getEmail(), credentials.getPassword());
+               if(credentials.getEmail().equals("admin@admin.com") && credentials.getPassword().equals("admin")){
+                   throw new CouponSystemException(ErrMsg.USER_NOT_ADMIN);
+               }
+               int customerId =  customerServiceImp.isCustomerExists(credentials.getEmail(), credentials.getPassword());
                    Customer customer = customerServiceImp.getOneCustomer(customerId);
                    return UserDetails.builder()
                            .userName(customer.getFirst_name() + '_' + customer.getLast_name())
