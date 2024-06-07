@@ -2,6 +2,7 @@ package CouponSystem.CouponSystem.controllers;
 
 import CouponSystem.CouponSystem.Exceptions.CouponSystemException;
 import CouponSystem.CouponSystem.beans.Credentials;
+import CouponSystem.CouponSystem.beans.LazyUserDetails;
 import CouponSystem.CouponSystem.beans.UserDetails;
 import CouponSystem.CouponSystem.database.servicesImp.UserServiceImp;
 import CouponSystem.CouponSystem.util.Jwt;
@@ -29,6 +30,6 @@ public class UserController {
         HttpHeaders headers = new HttpHeaders();
         UserDetails userDetails = userServiceImp.login(user);
         headers.set("Authorization","Bearer "+jwt.generateToken(userDetails));
-        return new ResponseEntity<>(userDetails.getId(),headers,HttpStatus.OK);
+        return new ResponseEntity<>(new LazyUserDetails(userDetails.getUserName(), userDetails.getId()),headers,HttpStatus.OK);
     }
 }
