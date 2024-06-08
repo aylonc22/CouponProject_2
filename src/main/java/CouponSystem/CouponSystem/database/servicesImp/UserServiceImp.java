@@ -23,7 +23,7 @@ public class UserServiceImp implements UserService {
                 companyServiceImp.addCompany(Company.builder()
                                 .id(0)
                                 .name(user.getUserName())
-                                .email(user.getPassword())
+                                .email(user.getEmail())
                                 .password(user.getPassword())
                         .build());
                 break;
