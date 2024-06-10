@@ -9,8 +9,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Order(4)
-@Component
+//@Order(4)
+//@Component
 @RequiredArgsConstructor
 public class CustomerTest implements CommandLineRunner {
     private final CouponService couponService;
