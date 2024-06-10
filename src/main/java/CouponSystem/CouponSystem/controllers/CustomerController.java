@@ -18,7 +18,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/api/v1/customer")
 @CrossOrigin
 public class CustomerController {
     private final CustomerServiceImp customerServiceImp;
