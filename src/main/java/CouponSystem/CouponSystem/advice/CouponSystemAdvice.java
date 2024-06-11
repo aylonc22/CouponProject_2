@@ -1,6 +1,7 @@
 package CouponSystem.CouponSystem.advice;
 
 import CouponSystem.CouponSystem.Exceptions.CouponSystemException;
+import com.sun.tools.jconsole.JConsoleContext;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -15,12 +16,16 @@ import java.util.HashMap;
 import java.util.Map;
 @RestControllerAdvice
 public class CouponSystemAdvice {
-    @ExceptionHandler(value = {SignatureException.class, ExpiredJwtException.class, MalformedJwtException.class,CouponSystemException.class })
+    @ExceptionHandler(value = {SignatureException.class, MalformedJwtException.class,CouponSystemException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDetails handleError(Exception e){
         return new ErrorDetails("Error",e.getMessage());
     }
-
+@ExceptionHandler(value = {ExpiredJwtException.class})
+@ResponseStatus(HttpStatus.UNAUTHORIZED)
+public void jwtExpire(){
+    System.out.println("Here");
+}
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String,String> handleValidationExceptions(MethodArgumentNotValidException exception){

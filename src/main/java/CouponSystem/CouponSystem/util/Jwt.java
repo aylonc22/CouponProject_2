@@ -88,7 +88,6 @@ public class Jwt {
     }
 
     public boolean validateToken(String token) throws MalformedJwtException, SignatureException{
-        System.out.println(token);
         final Claims claims = extractAllClaims(token);
         return true;
     }
