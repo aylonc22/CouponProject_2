@@ -58,7 +58,7 @@ public class CouponServiceImp implements CouponService {
       }
       Company company = companyRepo.findById(companyID)
               .orElseThrow(()->new CouponSystemException(ErrMsg.COMPANY_NOT_FOUND));
-      company.setCoupons(company.getCoupons().stream().filter(coupon -> coupon.getCouponID()!= couponID).toList());
+      company.getCoupons().removeIf(coupon -> coupon.getCouponID() == couponID);
       companyRepo.saveAndFlush(company);
       couponRepo.deleteById(couponID);
       System.out.println("Coupon ID: " + couponID + " is deleted");
