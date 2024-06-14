@@ -84,6 +84,9 @@ public class CouponServiceImp implements CouponService {
       }
       Customer customer = customerRepo.findById(customerID)
               .orElseThrow(()->new CouponSystemException(ErrMsg.CUSTOMER_NOT_FOUND));
+      if(customer.getCoupons().stream().filter(f->f.getCouponID()==couponID).toArray().length>0){
+        throw new CouponSystemException(ErrMsg.CUSTOMER_ALREADY_HAS_COUPON);
+      }
       customer.getCoupons().add(coupon);
       customerRepo.saveAndFlush(customer);
       coupon.setAmount(coupon.getAmount()-1);

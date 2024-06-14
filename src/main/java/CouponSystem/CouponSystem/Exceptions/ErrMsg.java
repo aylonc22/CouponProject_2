@@ -13,6 +13,7 @@ public enum ErrMsg {
     COMPANY_NOT_LOGGED_IN("Company is not logged in!"),
     COMPANY_NOT_FOUND("Company not found!"),
     CUSTOMER_NOT_FOUND("Customer not found!"),
+    CUSTOMER_ALREADY_HAS_COUPON("Customer already have this coupon!"),
     COUPON_NOT_FOUND("Coupon not found!"),
     OUT_OF_STOCK("Coupon is out of stock!"),
     SQL_DUPLICATE("Unique key exception!"),
