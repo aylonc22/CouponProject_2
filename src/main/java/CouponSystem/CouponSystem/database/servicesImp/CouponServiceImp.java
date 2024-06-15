@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,15 +33,16 @@ public class CouponServiceImp implements CouponService {
     @Override
     public void updateCoupon(Coupon coupon) throws CouponSystemException {
       if(couponRepo.findById(coupon.getCouponID()).isPresent())  {
-        Coupon checkCoupon = couponRepo.findByCompanyIDAndTitle(coupon.getCompanyID(),coupon.getTitle())
-                .orElseThrow(()->new CouponSystemException(ErrMsg.COUPON_NOT_FOUND));
-        if(checkCoupon.getCouponID() != coupon.getCouponID()){
+       Optional<Coupon> checkCoupon = couponRepo.findByCompanyIDAndTitle(coupon.getCompanyID(),coupon.getTitle());
+        if(checkCoupon.isPresent() && checkCoupon.get().getCouponID() != coupon.getCouponID()){
           throw new CouponSystemException(ErrMsg.COUPON_ALREADY_EXISTS);
         }
           couponRepo.saveAndFlush(coupon);
         System.out.println("Coupon with ID: " + coupon.getCouponID() + " is updated\n" + coupon);
       }
-      throw new CouponSystemException(ErrMsg.COUPON_NOT_FOUND);
+      else {
+        throw new CouponSystemException(ErrMsg.COUPON_NOT_FOUND);
+      }
     }
 
     @Override
