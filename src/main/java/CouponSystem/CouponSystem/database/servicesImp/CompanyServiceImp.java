@@ -50,8 +50,19 @@ public class CompanyServiceImp implements CompanyService {
     @Override
     public void updateCompany(Company company) throws CouponSystemException {
         if(companyRepo.existsById(company.getId())) {
-            companyRepo.saveAndFlush(company);
-            System.out.println("Company updated\n" + company);
+            if(company.getPassword() == null) {
+                companyRepo.findById(company.getId()).ifPresent(tempComp -> {
+                    tempComp.setEmail(company.getEmail());
+                    tempComp.setName(company.getName());
+                    companyRepo.saveAndFlush(tempComp);
+                    System.out.println("Company updated\n" + tempComp);
+                });
+            }
+            else {
+                companyRepo.saveAndFlush(company);
+                System.out.println("Company updated\n" + company);
+            }
+
         }
         else {
             throw new CouponSystemException(ErrMsg.COMPANY_NOT_FOUND);

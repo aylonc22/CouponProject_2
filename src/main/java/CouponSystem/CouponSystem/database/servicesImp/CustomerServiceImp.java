@@ -37,8 +37,19 @@ public class CustomerServiceImp implements CustomerService {
     @Override
     public void updateCustomer(Customer customer) throws CouponSystemException {
         if(customerRepo.existsById(customer.getCustomerID())) {
+           if(customer.getPassword() == null)
+           {
+               customerRepo.findById(customer.getCustomerID()).ifPresent(tempCustomer ->{
+                   tempCustomer.setEmail(customer.getEmail());
+                   tempCustomer.setFirst_name(customer.getFirst_name());
+                   tempCustomer.setLast_name(customer.getLast_name());
+                   customerRepo.saveAndFlush(tempCustomer);
+                   System.out.println("Customer updated\n" + tempCustomer);
+               });
+           }
+           else {
             customerRepo.saveAndFlush(customer);
-            System.out.println("Customer updated\n" + customer);
+            System.out.println("Customer updated\n" + customer);}
         }
         else {
             throw new CouponSystemException(ErrMsg.CUSTOMER_NOT_FOUND);
